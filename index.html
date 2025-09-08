@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPUT E-Sports Showdown: Crimson Carnival</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Styles */
+        body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: #f0f0f0; }
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        .animated-text-continuous {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%; -webkit-background-clip: text; background-clip: text; color: transparent;
+            animation: gradient-flow 10s ease infinite; text-shadow: 0 0 10px rgba(255, 255, 255, 0.1), 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+        @keyframes gradient-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .animated-subtle-pulse { animation: subtle-pulse 2s ease-in-out infinite; }
+        @keyframes subtle-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } }
+        .btn-cement { background-color: transparent; border: 2px solid #8A8A8A; color: #f0f0f0; transition: all 0.3s ease; }
+        .btn-cement:hover { background-color: #8A8A8A; color: #0a0a0a; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(138, 138, 138, 0.2); }
+        .btn-danger { background-color: transparent; border: 2px solid #ef4444; color: #ef4444; transition: all 0.3s ease; }
+        .btn-danger:hover { background-color: #ef4444; color: #0a0a0a; }
+        .form-input, .form-select { background-color: #1a1a1a; border: 1px solid #444; color: #f0f0f0; border-radius: 0.5rem; }
+        .form-input:focus, .form-select:focus { outline: none; border-color: #8A8A8A; box-shadow: 0 0 0 3px rgba(138, 138, 138, 0.3); }
+        .form-input::file-selector-button { background-color: #8A8A8A; color: #0a0a0a; border: none; padding: 0.5rem 1rem; border-radius: 0.375rem 0 0 0.375rem; cursor: pointer; transition: background-color 0.2s ease; }
+        .form-input::file-selector-button:hover { background-color: #a0a0a0; }
+        .glass-container { background: rgba(26, 26, 26, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1rem; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .role-checkbox-group label { display: inline-block; background-color: #2a2a2a; color: #ccc; padding: 8px 16px; border-radius: 20px; cursor: pointer; transition: all 0.2s ease; border: 1px solid #444; }
+        .role-checkbox-group input[type="checkbox"] { display: none; }
+        .role-checkbox-group input[type="checkbox"]:checked + label { background-color: #8A8A8A; color: #0a0a0a; border-color: #8A8A8A; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 overflow-hidden">
+    <!-- Background Gradient Animation -->
+    <div class="absolute top-0 left-0 w-full h-full bg-black z-[-1]">
+        <div class="absolute bottom-0 left-[-20%] right-0 top-[-10%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle_farthest-side,rgba(255,0,182,.15),rgba(255,255,255,0))]"></div>
+        <div class="absolute bottom-0 right-[-20%] top-[-10%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle_farthest-side,rgba(255,0,182,.15),rgba(255,255,255,0))]"></div>
+    </div>
+
+    <!-- Page Container -->
+    <div id="app-container" class="w-full max-w-5xl h-[90vh] overflow-hidden">
+        <!-- All pages will be rendered within this container -->
+
+        <!-- Landing Page -->
+        <div id="landing-page" class="text-center h-full flex flex-col justify-center items-center transition-opacity duration-1000 ease-in-out">
+            <h1 class="font-orbitron font-black text-4xl sm:text-6xl md:text-8xl lg:text-9xl tracking-widest animated-text-continuous">
+                BPUT E-SPORTS<br>SHOWDOWN
+            </h1>
+            <button id="go-button" class="mt-12 px-10 py-4 text-2xl font-bold rounded-lg btn-cement font-orbitron">
+                GO
+            </button>
+        </div>
+
+        <!-- Auth Page (Login/Signup) -->
+        <div id="auth-page" class="hidden h-full flex flex-col justify-center items-center">
+            <!-- Auth content is loaded dynamically here -->
+        </div>
+
+        <!-- Main Content Area -->
+        <div id="main-content" class="hidden h-full flex flex-col transition-opacity duration-1000 ease-in-out">
+            <!-- Main header is loaded dynamically -->
+            <div class="flex-grow overflow-y-auto no-scrollbar px-4">
+                 <!-- Main views (registration, admin, etc.) are loaded here -->
+            </div>
+        </div>
+
+        <!-- Admin Login Modal -->
+        <div id="admin-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+            <div class="glass-container p-8 rounded-lg shadow-xl w-full max-w-md relative">
+                <button id="close-admin-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white">&times;</button>
+                <h3 class="font-orbitron text-2xl mb-6 text-center">Admin Login</h3>
+                <form id="admin-login-form" class="space-y-4">
+                    <input type="text" id="username" placeholder="Username" class="w-full p-3 form-input">
+                    <input type="password" id="password" placeholder="Password" class="w-full p-3 form-input">
+                    <p id="admin-login-error" class="text-red-500 text-sm hidden">Invalid credentials.</p>
+                    <div class="text-center pt-2">
+                        <button type="submit" class="w-full px-6 py-3 font-bold rounded-lg btn-cement">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // --- STATE MANAGEMENT ---
+    let users = [];
+    let registeredPlayers = []; // Now stores full File objects
+    let archivedData = [];
+    let currentUser = null;
+
+    // --- DOM REFERENCES ---
+    const appContainer = document.getElementById('app-container');
+    const landingPage = document.getElementById('landing-page');
+    const authPage = document.getElementById('auth-page');
+    const mainContent = document.getElementById('main-content');
+    const goButton = document.getElementById('go-button');
+    const adminModal = document.getElementById('admin-modal');
+    
+    // --- TEMPLATES (HTML strings for dynamic rendering) ---
+    const authTemplate = `
+        <div class="glass-container p-8 w-full max-w-md">
+            <!-- Login Form -->
+            <div id="login-view">
+                <h2 class="font-orbitron text-3xl text-center mb-6">Login</h2>
+                <form id="login-form" class="space-y-4">
+                    <input type="tel" id="login-phone" placeholder="Phone Number" required class="w-full p-3 form-input">
+                    <input type="password" id="login-password" placeholder="Password" required class="w-full p-3 form-input">
+                    <p id="login-error" class="text-red-500 text-sm hidden">Invalid credentials or user not found.</p>
+                    <button type="submit" class="w-full px-8 py-3 text-lg font-bold rounded-lg btn-cement">Login</button>
+                </form>
+                <p class="text-center mt-4 text-sm text-gray-400">Don't have an account? <button id="show-signup-btn" class="font-bold text-white hover:underline">Sign Up</button></p>
+            </div>
+            <!-- Signup Form -->
+            <div id="signup-view" class="hidden">
+                 <h2 class="font-orbitron text-3xl text-center mb-6">Sign Up</h2>
+                 <form id="signup-form" class="space-y-4">
+                    <input type="text" id="signup-name" placeholder="Full Name" required class="w-full p-3 form-input">
+                    <input type="tel" id="signup-phone" placeholder="Phone Number" required class="w-full p-3 form-input">
+                    <input type="email" id="signup-email" placeholder="Email" required class="w-full p-3 form-input">
+                    <input type="password" id="signup-password" placeholder="Password" required class="w-full p-3 form-input">
+                    <input type="text" id="signup-game" placeholder="Primary Game (e.g., Valorant)" required class="w-full p-3 form-input">
+                    <input type="text" id="signup-uid" placeholder="In-Game UID" required class="w-full p-3 form-input">
+                    <p id="signup-error" class="text-red-500 text-sm hidden">This phone number is already registered.</p>
+                    <button type="submit" class="w-full px-8 py-3 text-lg font-bold rounded-lg btn-cement">Sign Up</button>
+                </form>
+                <p class="text-center mt-4 text-sm text-gray-400">Already have an account? <button id="show-login-btn" class="font-bold text-white hover:underline">Login</button></p>
+            </div>
+        </div>`;
+        
+    const mainHeaderTemplate = `
+        <header class="text-center mb-6 px-4">
+            <h2 class="font-orbitron font-bold text-5xl md:text-6xl text-white">CRIMSON CARNIVAL</h2>
+            <p class="text-gray-400 mt-2 italic">"In the arena of pixels, legends are not born, they are made."</p>
+            <div class="mt-2 text-right">
+                <button id="admin-login-btn" class="text-sm text-gray-400 hover:text-white transition">Admin Portal</button>
+            </div>
+        </header>`;
+
+    const registrationTemplate = `
+        <main id="registration-view" class="w-full">
+            <div class="glass-container p-8 shadow-2xl">
+                <h3 class="font-orbitron text-2xl mb-6">Event Registration</h3>
+                <form id="registration-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div><label class="block text-sm font-medium text-gray-300 mb-2">Player Name</label><input type="text" id="playerName" readonly class="w-full p-3 form-input bg-gray-700 cursor-not-allowed"></div>
+                        <div><label class="block text-sm font-medium text-gray-300 mb-2">Player UID</label><input type="text" id="playerUID" readonly class="w-full p-3 form-input bg-gray-700 cursor-not-allowed"></div>
+                        <div class="md:col-span-2"><label for="teamName" class="block text-sm font-medium text-gray-300 mb-2">Team Name</label><input type="text" id="teamName" required class="w-full p-3 form-input"></div>
+                        <div><label for="branch" class="block text-sm font-medium text-gray-300 mb-2">Branch</label><input type="text" id="branch" required class="w-full p-3 form-input"></div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Role(s)</label>
+                        <div class="role-checkbox-group flex flex-wrap gap-3">
+                            <input type="checkbox" id="role-igl" value="IGL"><label for="role-igl">IGL</label>
+                            <input type="checkbox" id="role-rusher" value="RUSHER"><label for="role-rusher">RUSHER</label>
+                            <input type="checkbox" id="role-frankler" value="FRANKLER"><label for="role-frankler">FRANKLER</label>
+                            <input type="checkbox" id="role-sniper" value="SNIPER"><label for="role-sniper">SNIPER</label>
+                            <input type="checkbox" id="role-bomber" value="BOMBER"><label for="role-bomber">BOMBER</label>
+                        </div>
+                    </div>
+                    <div id="team-logo-wrapper" class="hidden"><label for="teamLogo" class="block text-sm font-medium text-gray-300 mb-2">Team Logo (for IGL)</label><input type="file" id="teamLogo" accept=".pdf,image/*" class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 form-input"></div>
+                    <div><label for="profilePic" class="block text-sm font-medium text-gray-300 mb-2">Profile Picture (PDF/Image)</label><input type="file" id="profilePic" required accept=".pdf,image/*" class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 form-input"></div>
+                    <div class="text-center pt-4"><button type="submit" class="w-full md:w-1/2 px-8 py-3 text-lg font-bold rounded-lg btn-cement font-orbitron">REGISTER</button></div>
+                </form>
+            </div>
+        </main>`;
+
+    const successTemplate = `<div class="text-center py-20"><h2 class="font-orbitron font-bold text-5xl md:text-7xl text-green-400 animated-subtle-pulse">ALL THE BEST</h2><button id="register-another-btn" class="mt-8 px-6 py-2 text-sm rounded-lg btn-cement">Register for Another Event</button></div>`;
+
+    const adminTemplate = `
+        <div id="admin-data-view" class="mt-8">
+            <div class="glass-container p-6">
+                <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+                    <div><h3 class="font-orbitron text-3xl">Live Registrations</h3><p class="text-sm text-gray-400">Total Players: <span id="total-players-count" class="font-bold">0</span></p></div>
+                    <div class="flex gap-2"><button id="archive-btn" class="px-4 py-2 text-sm rounded-lg btn-danger">Clear & Archive</button><button id="download-csv-btn" class="px-4 py-2 text-sm rounded-lg btn-cement">Download Live CSV</button></div>
+                </div>
+                <div class="overflow-x-auto"><table class="min-w-full text-sm"><thead class="border-b border-gray-600"><tr>
+                    <th class="py-3 px-2 text-left font-semibold text-gray-300">#</th><th class="py-3 px-4 text-left font-semibold text-gray-300">Team Name</th>
+                    <th class="py-3 px-4 text-left font-semibold text-gray-300">Players</th><th class="py-3 px-4 text-left font-semibold text-gray-300">Team Logo</th>
+                </tr></thead><tbody id="player-data-tbody"></tbody></table><p id="no-data-msg" class="text-center py-8 text-gray-400">No players have registered yet.</p></div>
+            </div>
+        </div>`;
+    
+    const topSecretAdminTemplate = `
+        <div id="top-secret-admin-view" class="mt-8">
+            <div class="glass-container p-6">
+                <h3 class="font-orbitron text-3xl mb-6">Top Secret: Data Archive</h3>
+                <div class="overflow-x-auto"><table class="min-w-full text-sm"><thead class="border-b border-gray-600"><tr>
+                    <th class="py-3 px-4 text-left font-semibold text-gray-300">Archive Date</th><th class="py-3 px-4 text-left font-semibold text-gray-300"># Players</th>
+                    <th class="py-3 px-4 text-left font-semibold text-gray-300">Actions</th>
+                </tr></thead><tbody id="archive-data-tbody"></tbody></table><p id="no-archive-msg" class="text-center py-8 text-gray-400">No data has been archived yet.</p></div>
+            </div>
+        </div>`;
+
+    // --- PAGE NAVIGATION & RENDERING ---
+    function switchView(parent, template) {
+        parent.innerHTML = template;
+    }
+
+    function showPage(page) {
+        landingPage.classList.add('hidden');
+        authPage.classList.add('hidden');
+        mainContent.classList.add('hidden');
+        page.classList.remove('hidden');
+    }
+
+    goButton.addEventListener('click', () => {
+        switchView(authPage, authTemplate);
+        addAuthListeners();
+        showPage(authPage);
+    });
+
+    // --- DYNAMIC EVENT LISTENERS BINDING ---
+    function addAuthListeners() {
+        document.getElementById('show-signup-btn').addEventListener('click', () => {
+            document.getElementById('login-view').classList.add('hidden');
+            document.getElementById('signup-view').classList.remove('hidden');
+        });
+        document.getElementById('show-login-btn').addEventListener('click', () => {
+            document.getElementById('signup-view').classList.add('hidden');
+            document.getElementById('login-view').classList.remove('hidden');
+        });
+        document.getElementById('signup-form').addEventListener('submit', handleSignup);
+        document.getElementById('login-form').addEventListener('submit', handleLogin);
+    }
+    
+    function addMainContentListeners() {
+        document.getElementById('admin-login-btn').addEventListener('click', () => adminModal.classList.remove('hidden'));
+        document.getElementById('registration-form')?.addEventListener('submit', handleRegistration);
+        document.querySelector('#role-igl')?.addEventListener('change', toggleTeamLogoUpload);
+        document.getElementById('register-another-btn')?.addEventListener('click', () => {
+            const mainContentContainer = mainContent.querySelector('.flex-grow');
+            switchView(mainContentContainer, registrationTemplate);
+            autofillRegistrationForm();
+            addMainContentListeners();
+        });
+        document.getElementById('archive-btn')?.addEventListener('click', handleArchive);
+        document.getElementById('download-csv-btn')?.addEventListener('click', () => downloadCsv(registeredPlayers, "live_registrations"));
+        document.getElementById('archive-data-tbody')?.addEventListener('click', handleArchiveActions);
+    }
+
+    // --- EVENT HANDLERS ---
+    function handleSignup(e) {
+        e.preventDefault();
+        const phone = document.getElementById('signup-phone').value;
+        if (users.find(u => u.phone === phone)) {
+            document.getElementById('signup-error').classList.remove('hidden'); return;
+        }
+        document.getElementById('signup-error').classList.add('hidden');
+        currentUser = {
+            name: document.getElementById('signup-name').value, phone: phone, email: document.getElementById('signup-email').value,
+            password: document.getElementById('signup-password').value, game: document.getElementById('signup-game').value, uid: document.getElementById('signup-uid').value,
+        };
+        users.push(currentUser);
+        mainContent.innerHTML = mainHeaderTemplate + `<div class="flex-grow overflow-y-auto no-scrollbar px-4">${registrationTemplate}</div>`;
+        showPage(mainContent);
+        autofillRegistrationForm();
+        addMainContentListeners();
+    }
+
+    function handleLogin(e) {
+        e.preventDefault();
+        const phone = document.getElementById('login-phone').value;
+        const password = document.getElementById('login-password').value;
+        const foundUser = users.find(u => u.phone === phone && u.password === password);
+        if (foundUser) {
+            currentUser = foundUser;
+            mainContent.innerHTML = mainHeaderTemplate + `<div class="flex-grow overflow-y-auto no-scrollbar px-4">${registrationTemplate}</div>`;
+            showPage(mainContent);
+            autofillRegistrationForm();
+            addMainContentListeners();
+        } else {
+            document.getElementById('login-error').classList.remove('hidden');
+        }
+    }
+
+    function handleRegistration(e) {
+        e.preventDefault();
+        const roles = Array.from(document.querySelectorAll('.role-checkbox-group input:checked')).map(el => el.value);
+        if (roles.length === 0) { alert("Please select at least one role."); return; }
+        
+        const teamLogoInput = document.getElementById('teamLogo');
+        const profilePicInput = document.getElementById('profilePic');
+
+        registeredPlayers.push({
+            playerName: currentUser.name, playerUID: currentUser.uid,
+            teamName: document.getElementById('teamName').value.trim(),
+            branch: document.getElementById('branch').value, roles: roles,
+            // **CHANGE**: Store the actual File object, not just the name.
+            profilePicFile: profilePicInput.files[0],
+            teamLogoFile: roles.includes('IGL') ? teamLogoInput.files[0] : null
+        });
+        
+        const mainContentContainer = mainContent.querySelector('.flex-grow');
+        switchView(mainContentContainer, successTemplate);
+        addMainContentListeners();
+    }
+    
+    function handleAdminLogin(e) {
+        e.preventDefault();
+        const password = document.getElementById('password').value;
+        const mainContentContainer = mainContent.querySelector('.flex-grow');
+        let viewToShow = null;
+        if (password === 'rudraece04') viewToShow = adminTemplate;
+        else if (password === 'rudra04') viewToShow = topSecretAdminTemplate;
+
+        if (viewToShow) {
+            adminModal.classList.add('hidden');
+            document.getElementById('admin-login-error').classList.add('hidden');
+            switchView(mainContentContainer, viewToShow);
+            if (password === 'rudraece04') renderGroupedPlayerData();
+            if (password === 'rudra04') renderArchivedData();
+            addMainContentListeners();
+        } else {
+            document.getElementById('admin-login-error').classList.remove('hidden');
+        }
+    }
+
+    function handleArchive() {
+        if (registeredPlayers.length === 0) { alert("No live data to archive."); return; }
+        archivedData.push({ id: Date.now(), timestamp: new Date(), players: [...registeredPlayers] });
+        registeredPlayers = [];
+        renderGroupedPlayerData();
+        alert("Live data has been cleared and archived successfully.");
+    }
+    
+    function handleArchiveActions(e) {
+        const target = e.target.closest('button');
+        if (!target) return;
+        const archiveId = target.dataset.archiveId;
+        const archive = archivedData.find(a => a.id == archiveId);
+
+        if (target.matches('.delete-archive-btn')) {
+            if (confirm('Are you sure you want to permanently delete this archive?')) {
+                archivedData = archivedData.filter(a => a.id != archiveId);
+                renderArchivedData();
+            }
+        } else if (target.matches('.download-archive-btn') && archive) {
+            const filename = `archive_${new Date(archive.timestamp).toISOString().slice(0,10)}`;
+            downloadCsv(archive.players, filename);
+        }
+    }
+
+    // --- RENDER & HELPER FUNCTIONS ---
+    function autofillRegistrationForm() {
+        if (currentUser) {
+            document.getElementById('playerName').value = currentUser.name;
+            document.getElementById('playerUID').value = currentUser.uid;
+        }
+    }
+
+    function toggleTeamLogoUpload() {
+        document.getElementById('team-logo-wrapper').classList.toggle('hidden', !this.checked);
+    }
+
+    function renderGroupedPlayerData() {
+        const tbody = document.getElementById('player-data-tbody');
+        tbody.innerHTML = '';
+        document.getElementById('total-players-count').textContent = registeredPlayers.length;
+        if (registeredPlayers.length === 0) { document.getElementById('no-data-msg').classList.remove('hidden'); return; }
+        document.getElementById('no-data-msg').classList.add('hidden');
+
+        const teams = registeredPlayers.reduce((acc, p) => { (acc[p.teamName] = acc[p.teamName] || []).push(p); return acc; }, {});
+        let teamCounter = 1, playerCounter = 1;
+        for (const teamName in teams) {
+            const players = teams[teamName];
+            // **CHANGE**: Create downloadable links instead of just text
+            const logoFile = players.find(p => p.teamLogoFile)?.teamLogoFile;
+            const logoHtml = logoFile 
+                ? `<a href="${URL.createObjectURL(logoFile)}" download="${logoFile.name}" class="text-blue-400 hover:underline">${logoFile.name}</a>` 
+                : 'N/A';
+            
+            const playersHtml = players.map(p => {
+                const profilePicHtml = p.profilePicFile
+                    ? `<a href="${URL.createObjectURL(p.profilePicFile)}" download="${p.profilePicFile.name}" class="text-blue-400 hover:underline">${p.profilePicFile.name}</a>`
+                    : 'N/A';
+                return `<div class="py-2 border-b border-gray-700 last:border-b-0"><p><strong>${playerCounter++}. ${p.playerName}</strong> (UID: ${p.playerUID})</p><p class="text-xs text-gray-400">Branch: ${p.branch}</p><p class="text-xs text-cyan-400">Roles: ${p.roles.join(', ')}</p><p class="text-xs text-gray-500">Profile: ${profilePicHtml}</p></div>`
+            }).join('');
+
+            const row = `<tr class="border-b border-gray-700 hover:bg-gray-800 transition-colors"><td class="py-4 px-2 align-top">${teamCounter++}</td><td class="py-4 px-4 align-top font-bold">${teamName}</td><td class="py-4 px-4 align-top">${playersHtml}</td><td class="py-4 px-4 align-top text-sm">${logoHtml}</td></tr>`;
+            tbody.innerHTML += row;
+        }
+    }
+    
+    function renderArchivedData() {
+        const tbody = document.getElementById('archive-data-tbody');
+        tbody.innerHTML = '';
+        if (archivedData.length === 0) { document.getElementById('no-archive-msg').classList.remove('hidden'); return; }
+        document.getElementById('no-archive-msg').classList.add('hidden');
+        archivedData.forEach(archive => {
+            const row = `<tr class="border-b border-gray-700"><td class="py-4 px-4">${archive.timestamp.toLocaleString()}</td><td class="py-4 px-4">${archive.players.length}</td><td class="py-4 px-4"><div class="flex gap-2"><button class="download-archive-btn px-3 py-1 text-xs rounded btn-cement" data-archive-id="${archive.id}">Download</button><button class="delete-archive-btn px-3 py-1 text-xs rounded btn-danger" data-archive-id="${archive.id}">Delete</button></div></td></tr>`;
+            tbody.innerHTML += row;
+        });
+    }
+
+    function downloadCsv(data, filename) {
+        if (data.length === 0) { alert('No data to download.'); return; }
+        let csv = "Team #,Team Name,Player #,Player Name,UID,Branch,Roles,Profile File,Team Logo File\n";
+        const teams = data.reduce((acc, p) => { (acc[p.teamName] = acc[p.teamName] || []).push(p); return acc; }, {});
+        let teamCounter = 1, playerCounter = 1;
+        for (const teamName in teams) {
+            const players = teams[teamName];
+            // **CHANGE**: Use .name property of the File object
+            const logoName = players.find(p => p.teamLogoFile)?.teamLogoFile.name || 'N/A';
+            players.forEach((p, i) => {
+                const profilePicName = p.profilePicFile ? p.profilePicFile.name : 'N/A';
+                csv += `${i === 0 ? teamCounter : ''},${i === 0 ? `"${teamName}"` : ''},${playerCounter++},"${p.playerName}","${p.playerUID}","${p.branch}","${p.roles.join(', ')}","${profilePicName}",${i === 0 ? `"${logoName}"` : ''}\n`;
+            });
+            teamCounter++;
+        }
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute("download", `${filename}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+    
+    // --- INITIAL SETUP ---
+    document.getElementById('close-admin-modal').addEventListener('click', () => adminModal.classList.add('hidden'));
+    document.getElementById('admin-login-form').addEventListener('submit', handleAdminLogin);
+    
+    </script>
+</body>
+</html>
+
+
